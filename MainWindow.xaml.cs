@@ -1,36 +1,25 @@
-﻿using Accord.Video.DirectShow;
+﻿using Accord;
+using CameraTemp.Pages;
 using CameraTemp.Webcams;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CameraTemp
 {
     public partial class MainWindow : Window
     {
+        Uri uriMenu = new Uri("Pages/MainMenu.xaml", UriKind.RelativeOrAbsolute);
+        Uri uriFilters = new Uri("Pages/FiltersMenu.xaml", UriKind.RelativeOrAbsolute);
+        Uri uriImage = new Uri("Pages/WebcamImage.xaml", UriKind.RelativeOrAbsolute);
         public MainWindow()
         {
             InitializeComponent();
-            WebcamsLogic.FillWebcams(Combo);
-            WebcamsLogic.SetFirstWebcam(Combo);
             WebcamsLogic._MainWindow = this;
-        }
-
-        private void Combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            WebcamsLogic.StopWebcam();
-            WebcamsLogic.StartWebcam(Combo);
+            Menu.Navigate(uriFilters);
+            Menu.Navigate(uriMenu);
+            ImageFrame.Source = uriImage;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -38,5 +27,14 @@ namespace CameraTemp
             WebcamsLogic.StopWebcam();
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Menu.Navigate(uriMenu);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Menu.Navigate(uriFilters);
+        }
     }
 }
