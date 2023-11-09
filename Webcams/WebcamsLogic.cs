@@ -10,15 +10,15 @@ using System.Windows.Threading;
 
 namespace CameraTemp.Webcams
 {
-    public class WebcamsLogic
+    class WebcamsLogic
     {
-        public MainWindow _MainWindow;
+        public static MainWindow _MainWindow;
 
-        private FilterInfoCollection _availableWebcams;
+        private static FilterInfoCollection _availableWebcams;
 
-        private VideoCaptureDevice _webcam;
+        private static VideoCaptureDevice _webcam;
 
-        public void FillWebcams(ComboBox comboBox)
+        public static void FillWebcams(ComboBox comboBox)
         {
             _availableWebcams = new FilterInfoCollection(FilterCategory.VideoInputDevice);
 
@@ -28,7 +28,7 @@ namespace CameraTemp.Webcams
             }
         }
 
-        public void SetFirstWebcam (ComboBox comboBox)
+        public static void SetFirstWebcam (ComboBox comboBox)
         {
             if (comboBox.Items.Count > 0)
             {
@@ -36,7 +36,7 @@ namespace CameraTemp.Webcams
             }
         }
 
-        public void StartWebcam(ComboBox comboBox)
+        public static void StartWebcam(ComboBox comboBox)
         {
             _availableWebcams = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             _webcam = new VideoCaptureDevice(_availableWebcams[comboBox.SelectedIndex].MonikerString);
@@ -44,7 +44,7 @@ namespace CameraTemp.Webcams
             _webcam.NewFrame += new NewFrameEventHandler(WebcamNewFrame);
         }
 
-        public void StopWebcam()
+        public static void StopWebcam()
         {
             if (_webcam != null && _webcam.IsRunning == true)
             {
@@ -54,7 +54,7 @@ namespace CameraTemp.Webcams
             }
         }
 
-        public void WebcamNewFrame (object sender, NewFrameEventArgs newFrame)
+        public static void WebcamNewFrame (object sender, NewFrameEventArgs newFrame)
         {
             _MainWindow.Dispatcher.Invoke(() =>
             {
@@ -62,7 +62,7 @@ namespace CameraTemp.Webcams
             });
         }
 
-        public BitmapImage BitmapToBitImage(Bitmap bitmap)
+        public static BitmapImage BitmapToBitImage(Bitmap bitmap)
         {
             using (MemoryStream memory = new MemoryStream())
             {

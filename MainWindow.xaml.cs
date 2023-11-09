@@ -14,14 +14,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static CameraTemp.Webcams.WebcamsLogic;
 
 namespace CameraTemp
 {
     public partial class MainWindow : Window
     {
-        private readonly WebcamsLogic WebcamsLogic = new WebcamsLogic();
-
         public MainWindow()
         {
             InitializeComponent();
