@@ -9,6 +9,10 @@
       Title="WebcamImage">
 
     <Grid>
-        <Image x:Name="Img" Height="340"/>
+        <Image x:Name="Img" Margin="10"/>
+        <DockPanel>
+            <Slider x:Name="Zoom" DockPanel.Dock="Right" Value="1" Minimum="0.1" Maximum="10" Width="25" ValueChanged="ZoomChanged" Orientation="Vertical" MouseWheel="Zoom_MouseWheel"/>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" Name="scrollViewer" VerticalScrollBarVisibility="Auto"></ScrollViewer>
+        </DockPanel>
     </Grid>
 </Page>

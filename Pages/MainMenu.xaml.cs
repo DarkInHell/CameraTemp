@@ -1,10 +1,7 @@
 ﻿using CameraTemp.Webcams;
-using Microsoft.Win32;
-using System;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+using static CameraTemp.Webcams.WebcamsLogic;
 
 namespace CameraTemp.Pages
 {
@@ -17,28 +14,28 @@ namespace CameraTemp.Pages
         public MainMenu()
         {
             InitializeComponent();
-            WebcamsLogic.FillWebcams(Combo);
-            WebcamsLogic.SetFirstWebcam(Combo);
+            FillWebcams(Combo);
+            SetFirstWebcam(Combo);
         }
 
         private void Combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            WebcamsLogic.StopWebcam();
-            WebcamsLogic.StartWebcam(Combo);
+            StopWebcam();
+            StartWebcam(Combo);
         }
 
         private void Photo_Click(object sender, RoutedEventArgs e)
         {
-            WebcamsLogic.PhotoButton();
+            PhotoButton();
         }
 
         private void StartRec_Click(object sender, RoutedEventArgs e)
         {
-            WebcamsLogic.RecordStart();
+            RecordStart();
         }
         private void StopRec_Click(object sender, RoutedEventArgs e)
         {
-            WebcamsLogic.RecordStop();
+            RecordStop();
         }
     }
 }

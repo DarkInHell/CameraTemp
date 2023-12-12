@@ -9,7 +9,7 @@
       Title="MainMenu">
 
     <Grid>
-        <StackPanel Margin="10">
+        <StackPanel Margin="10" HorizontalAlignment="Left">
             <ComboBox x:Name="Combo" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" SelectionChanged="Combo_SelectionChanged" Margin="10"/>
             <Button x:Name="Photo"      Content="Фото"  Width="120" Height="20" Margin="10" Click="Photo_Click"/>
             <Button x:Name="StartRec"   Content="Старт" Width="120" Height="20" Margin="10" Click="StartRec_Click"/>

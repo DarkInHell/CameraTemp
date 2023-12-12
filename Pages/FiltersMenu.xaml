@@ -10,10 +10,10 @@
 
     <Grid>
         <StackPanel Margin="10">
-            <CheckBox Margin="10" Content="Разворот по Х"/>
-            <CheckBox Margin="10" Content="Разворот по У"/>
+            <CheckBox Margin="10" x:Name="RotationX"   Content="Разворот по Х" Checked="RotationX_Checked" IsManipulationEnabled="True"/>
+            <CheckBox Margin="10" x:Name="RotationY"   Content="Разворот по У" Checked="RotationY_Checked" IsManipulationEnabled="True"/>
             <CheckBox Margin="10" x:Name="InvertCheck" Content="Инверсия" Checked="InvertCheck_Checked" IsManipulationEnabled="True"/>
-            <CheckBox Margin="10" Content="ЧБ"/>
+            <CheckBox Margin="10" x:Name="BlackWhite"  Content="ЧБ" Checked="BlackWhite_Checked" IsManipulationEnabled="True"/>
         </StackPanel>
     </Grid>
 </Page>

@@ -6,19 +6,19 @@
         xmlns:local="clr-namespace:CameraTemp"
         mc:Ignorable="d"
         Closed="Window_Closed"
-        Title="MainWindow" Height="800" Width="800">
+        Title="Perry" Height="800" Width="800">
     <Grid Background="#FF564141">
         <Grid.RowDefinitions>
-            <RowDefinition Height="400"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Frame x:Name="ImageFrame" Height="340" Grid.Row="0"/>
+        <Frame x:Name="ImageFrame" MinHeight="340" MaxHeight="1000" Grid.Row="0"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Width="100" Content="Photo" Click="Button_Click"/>
             <Button Width="100" Content="Filters" Click="Button_Click_1"/>
         </StackPanel>
-        <Frame x:Name="Menu" Grid.Row="2"/>
-
+        <Frame x:Name="Menu" Grid.Row="2" NavigationUIVisibility="Hidden"/>
+        
     </Grid>
 </Window>

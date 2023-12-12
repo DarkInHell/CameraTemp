@@ -1,32 +1,30 @@
-﻿using Accord.Video;
+﻿using Accord.Imaging.Filters;
+using Accord.Video;
 using Accord.Video.DirectShow;
 using Accord.Video.FFMPEG;
-using CameraTemp.Pages;
 using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Accord.Imaging.Filters;
-using System.Threading.Tasks;
+using static CameraTemp.Webcams.FrameManager;
 
 namespace CameraTemp.Webcams
 {
     class WebcamsLogic
     {
-        public static MainWindow _MainWindow;
 
-        public static MainMenu _MainMenu;
-
-        public static WebcamImage _WebcamImage;
-
-        public static FiltersMenu _FiltersMenu;
+        public static ScaleTransform scaleTransform;
 
         private static FilterInfoCollection _availableWebcams;
 
-        private static VideoCaptureDevice _webcam;
+        public static VideoCaptureDevice _webcam;
 
         private static bool _recording;
 
@@ -38,13 +36,13 @@ namespace CameraTemp.Webcams
         {
             _availableWebcams = new FilterInfoCollection(FilterCategory.VideoInputDevice);
 
-                foreach (var webcam in _availableWebcams)
-                {
-                    comboBox.Items.Add(webcam.Name);
-                }
+            foreach (var webcam in _availableWebcams)
+            {
+                comboBox.Items.Add(webcam.Name);
+            }
         }
 
-        public static void SetFirstWebcam (ComboBox comboBox)
+        public static void SetFirstWebcam(ComboBox comboBox)
         {
             if (comboBox.Items.Count > 0)
             {
@@ -70,17 +68,40 @@ namespace CameraTemp.Webcams
             }
         }
 
-        public static void WebcamNewFrame (object sender, NewFrameEventArgs newFrame)
+        public static void WebcamNewFrame(object sender, NewFrameEventArgs newFrame)
         {
-            _WebcamImage.Dispatcher.Invoke(() =>
+            var bitmap = newFrame.Frame;
+            WebcamImageFrame().Dispatcher.Invoke(() =>
             {
                 FirstFrameTime(newFrame);
-                FiltersInvert(ref newFrame, _FiltersMenu.InvertCheck);
-                _WebcamImage.Img.Source = BitmapToBitImage(newFrame.Frame);
+
+                FiltersApply(newFrame, FiltersMenuFrame().InvertCheck, new Invert(), out bitmap);
+
+                FiltersApply(newFrame, FiltersMenuFrame().BlackWhite, Grayscale.CommonAlgorithms.BT709, out bitmap);
+
+                FiltersApply(bitmap, FiltersMenuFrame().RotationX);
+
+                FiltersApply(bitmap, FiltersMenuFrame().RotationY);
+
+                WebcamImageFrame().Img.Source = BitmapToBitImage(bitmap);
             });
         }
+        public static void ZoomLogic(object sender, ScaleTransform scale)
+        {
+            if (_webcam != null)
+            {
+                Binding bindx = new Binding();
+                bindx.Source = sender as Slider;
+                bindx.Path = new PropertyPath("Value");
+                BindingOperations.SetBinding(scale, ScaleTransform.ScaleXProperty, bindx);
+                Binding bindy = new Binding();
+                bindy.Source = sender as Slider;
+                bindy.Path = new PropertyPath("Value");
+                BindingOperations.SetBinding(scale, ScaleTransform.ScaleYProperty, bindy);
+            }
+        }
 
-        public static void FirstFrameTime (NewFrameEventArgs newFrame)
+        public static void FirstFrameTime(NewFrameEventArgs newFrame)
         {
             if (_recording)
             {
@@ -96,14 +117,41 @@ namespace CameraTemp.Webcams
             }
         }
 
-        public static void FiltersInvert (ref NewFrameEventArgs newFrame, CheckBox checkBox)
+        private static void FiltersApply(Bitmap newFrame, CheckBox checkBox)
+        {
+            if (checkBox.IsChecked == true && checkBox.Name.Last() == 'X')
+            {
+                newFrame.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            }
+            if (checkBox.IsChecked == true && checkBox.Name.Last() == 'Y')
+            {
+                newFrame.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            }
+
+        }
+
+        private static void FiltersApply(NewFrameEventArgs newFrame, CheckBox checkBox, IFilter baseFilter, out Bitmap bitmap)
         {
             if (checkBox.IsChecked == true)
-                {
-                    Invert invert = new Invert();
-                    invert.ApplyInPlace(newFrame.Frame);
-                }
-
+            {
+                bitmap = baseFilter.Apply(newFrame.Frame);
+            }
+            else
+            {
+                bitmap = newFrame.Frame;
+            }
+        }
+        public static void FiltersApply(NewFrameEventArgs newFrame, CheckBox checkBox, BaseInPlacePartialFilter filter, out Bitmap bitmap)
+        {
+            if (checkBox.IsChecked == true)
+            {
+                filter.ApplyInPlace(newFrame.Frame);
+                bitmap = newFrame.Frame;
+            }
+            else
+            {
+                bitmap = newFrame.Frame;
+            }
         }
 
         public static BitmapImage BitmapToBitImage(Bitmap bitmap)
@@ -132,16 +180,16 @@ namespace CameraTemp.Webcams
                 return;
             }
             var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create((System.Windows.Media.Imaging.BitmapSource)_WebcamImage.Img.Source));
+            encoder.Frames.Add(BitmapFrame.Create((BitmapSource)WebcamImageFrame().Img.Source));
             using (var fileStream = new FileStream(dialog.FileName, FileMode.Create))
             {
                 encoder.Save(fileStream);
             }
         }
 
-        public static void RecordStart ()
+        public static void RecordStart()
         {
-            var video = (System.Windows.Media.Imaging.BitmapSource)_WebcamImage.Img.Source;
+            var video = (BitmapSource)WebcamImageFrame().Img.Source;
             var videoDialog = new SaveFileDialog
             {
                 FileName = "Video1",
@@ -159,7 +207,7 @@ namespace CameraTemp.Webcams
             _recording = true;
         }
 
-        public static void RecordStop ()
+        public static void RecordStop()
         {
             _recording = false;
             writer.Close();
