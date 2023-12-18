@@ -10,7 +10,6 @@ namespace CameraTemp
         public MainWindow()
         {
             InitializeComponent();
-            //FillWebcams(MainMenuFrame().Combo);
             ImageFrame.NavigationService.Navigate(WebcamImageFrame());
             Menu.NavigationService.Navigate(MainMenuFrame());
         }

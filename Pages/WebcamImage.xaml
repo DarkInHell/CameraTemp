@@ -8,11 +8,15 @@
       d:DesignHeight="340" d:DesignWidth="800"
       Title="WebcamImage">
 
-    <Grid>
+    <Grid x:Name="root">
         <Image x:Name="Img" Margin="10"/>
         <DockPanel>
-            <Slider x:Name="Zoom" DockPanel.Dock="Right" Value="1" Minimum="0.1" Maximum="10" Width="25" ValueChanged="ZoomChanged" Orientation="Vertical" MouseWheel="Zoom_MouseWheel"/>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" Name="scrollViewer" VerticalScrollBarVisibility="Auto"></ScrollViewer>
+            <Slider x:Name="Zoom" DockPanel.Dock="Right" Value="0" Minimum="0.1" Maximum="10" Width="25" ValueChanged="ZoomChanged" Orientation="Vertical"/>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" Name="scrollViewer" VerticalScrollBarVisibility="Auto" MouseWheel="ScrollViewer_MouseWheel"> 
+                <ScrollViewer.RenderTransform>
+                    <ScaleTransform x:Name="sfr"/>
+                </ScrollViewer.RenderTransform>
+            </ScrollViewer>
         </DockPanel>
     </Grid>
 </Page>
